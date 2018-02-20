@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,7 +9,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
   </head>
@@ -19,7 +19,7 @@
       <nav class="navbar navbar-expand-sm navbar-dark bg-secondary justify-content-center p-0 m-0">
         <a class="navbar-brand text-center" href="/">smallRNA Analysis <small> by MelloLab</small></a>
       </nav>
-      <nav class="navbar navbar-expand-sm navbar-light bg-light p-0 mb-2">
+      <nav class="navbar navbar-expand-sm navbar-light bg-light p-0 mb-4">
         <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
           <div class="container pl-2">
             <div class="row">
