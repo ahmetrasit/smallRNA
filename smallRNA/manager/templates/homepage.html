@@ -29,7 +29,7 @@
         </div>
         <div class="card-footer bg-transparent border-light p-2 mb-2">
           <button type="button" class="btn btn-lg btn-success btn-block">Upload FASTQ file(s)</button>
-          <button type="button" class="btn btn-outline-success btn-block">Upload Read Counts</button>
+          <button type="button" class="btn btn-outline-success btn-block">Upload Customized Data</button>
         </div>
       </div>
 
@@ -50,7 +50,7 @@
         <div class="card-footer bg-transparent border-light p-2 mb-2">
           <button type="button" class="btn btn-primary btn-block"><span class="h5">Align</span> Prepared Reads</button>
           <button type="button" class="btn btn-primary btn-block"><span class="h5">Analyze</span> Aligned Reads</button>
-          <button type="button" class="btn btn-primary btn-block"><span class="h5">Visualize</span> Analyzed Reads</button>
+          <button type="button" class="btn btn-primary btn-block"><span class="h5">Visualize</span> Analysis</button>
         </div>
       </div>
 
@@ -60,9 +60,9 @@
           <p class="card-text text-justify">You can check your performed analysis or interactive visualizations. Only you can see your results unless you share them.</p>
         </div>
         <div class="card-footer bg-transparent border-light p-2 mb-2">
-          <button type="button" class="btn btn-info btn-block">Data <span class="badge badge-light">{{unvisited_data}} new</span></button>
-          <button type="button" class="btn btn-info btn-block">Analysis <span class="badge badge-light">{{unvisited_analysis}} new</span></button>
-          <button type="button" class="btn btn-info btn-block">Visualizations <span class="badge badge-light">{{unvisited_visualization}} new</span></button>
+          <button type="button" class="btn btn-info btn-block">Data <span class="badge badge-warning align-top" style="font-size:.5em">{{unvisited_data}} new</span></button>
+          <button type="button" class="btn btn-info btn-block">Analysis <span class="badge badge-warning align-top" style="font-size:.5em">{{unvisited_analysis}} new</span></button>
+          <button type="button" class="btn btn-info btn-block">Visualizations <span class="badge badge-warning align-top" style="font-size:.5em">{{unvisited_visualization}} new</span></button>
         </div>
       </div>
 

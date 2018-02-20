@@ -24,13 +24,18 @@
           <div class="container pl-2">
             <div class="row">
               <ul class="navbar-nav mr-auto mt-1 mt-lg-0 pt-0">
+                <li class="nav-item  active">
+                  <a class="nav-link" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    Run Workflow
+                  </a>
+                </li>
                 <li class="nav-item dropdown active">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Prepare
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="#">Upload FASTQ file(s)</a>
-                    <a class="dropdown-item" href="#">Upload Read Counts</a>
+                    <a class="dropdown-item" href="#">Upload Customized Data</a>
                   </div>
                 </li>
                 <li class="nav-item dropdown active">
@@ -49,9 +54,9 @@
                     Review
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Data</a>
-                    <a class="dropdown-item" href="#">Analysis</a>
-                    <a class="dropdown-item" href="#">Visualizations</a>
+                    <a class="dropdown-item" href="#">Data <span class="badge badge-warning mt-0 align-top" style="font-size:.5em">{{unvisited_data}} new</span></a>
+                    <a class="dropdown-item" href="#">Analysis <span class="badge badge-warning mt-0 align-top" style="font-size:.5em">{{unvisited_analysis}} new</span></a>
+                    <a class="dropdown-item" href="#">Visualizations <span class="badge badge-warning mt-0 align-top" style="font-size:.5em">{{unvisited_visualization}} new</span></a>
                   </div>
                 </li>
                 <li class="nav-item dropdown active">
@@ -69,7 +74,7 @@
                 {% if user.is_authenticated %}
                 <a class="nav-link pr-0 pb-1 pt-1" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
                   <button type="button" class="btn btn-sm btn-outline-secondary">
-                    {{user.username}} <span class="badge badge-warning">{{notifications}}new</span>
+                    {{user.username}} <span class="badge badge-warning align-top" style="font-size:.5em">{{notifications}}new</span>
                     <span class="sr-only">unread messages</span>
                   </button>
 
