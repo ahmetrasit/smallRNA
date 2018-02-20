@@ -1,0 +1,88 @@
+{% extends 'navigation.html' %}
+{% load static %}
+
+
+
+	<title>{% block title %}smallRNA-Seq Analysis Pipeline{% endblock %}</title>
+
+	{% block body %}
+  <div class="row">
+      <div class="col-12 jumbotron pt-3 pb-3 mb-4">
+        <h1 class="display-4">Discover</h1>
+        <p class="lead">Start with <span class="text-success">processing your smallRNA-Seq data</span>, <span class="text-secondary">build a custom annotation</span> (eg, for transgenes) or use official ones to <span class="text-primary">align your data</span>, <span class="text-primary">filter reads by species and group by genes</span>, and <span class="text-primary">compare samples using scatter plots and venn diagrams</span>.</p>
+        <p>
+          <button type="button" class="btn btn-warning btn-block">In a hurry? Run a Workflow!</button>
+        </p>
+      </div>
+
+  </div>
+
+  <div class="row">
+    <div class="card-deck">
+      <div class="card border-success mb-5">
+        <div class="card-header display-4 pt-1 text-success"><span style="font-size:.8em">Prepare</span></div>
+        <div class="card-body">
+          <p class="card-text text-justify">
+            You need to process your FASTQ data first to do analysis.
+            Processed data can be accessed by your group members unless hidden by owner.
+          </p>
+        </div>
+        <div class="card-footer bg-transparent border-light p-2 mb-2">
+          <button type="button" class="btn btn-lg btn-success btn-block">Upload FASTQ file(s)</button>
+          <button type="button" class="btn btn-outline-success btn-block">Upload Read Counts</button>
+        </div>
+      </div>
+
+      <div class="card bg-light mb-5 border-primary">
+        <div class="card-header display-4 pt-1 text-primary"><span style="font-size:.8em">Analyze</span></div>
+        <div class="card-body">
+          <p class="card-text text-justify">Using already processed data, you can perform your own analysis in the following order.</p>
+          <p class="lead text-justify m-0" style="font-size:.7em"><span class="text-muted mb-1 my-1" >
+            {% if samples > 1 %}
+            There are {{samples}} samples in the repository from {{experiments}} experiments.
+            {% elif samples > 0 %}
+            There is only 1 sample in the repository.
+            {% else %}
+            There is no data yet in the repository.
+            {% endif %}
+          </span></p>
+        </div>
+        <div class="card-footer bg-transparent border-light p-2 mb-2">
+          <button type="button" class="btn btn-primary btn-block"><span class="h5">Align</span> Prepared Reads</button>
+          <button type="button" class="btn btn-primary btn-block"><span class="h5">Analyze</span> Aligned Reads</button>
+          <button type="button" class="btn btn-primary btn-block"><span class="h5">Visualize</span> Analyzed Reads</button>
+        </div>
+      </div>
+
+      <div class="card bg-light mb-5 border-info">
+        <div class="card-header display-4 pt-1 text-info"><span style="font-size:.8em">Review</span></div>
+        <div class="card-body">
+          <p class="card-text text-justify">You can check your performed analysis or interactive visualizations. Only you can see your results unless you share them.</p>
+        </div>
+        <div class="card-footer bg-transparent border-light p-2 mb-2">
+          <button type="button" class="btn btn-info btn-block">Data <span class="badge badge-light">{{unvisited_data}} new</span></button>
+          <button type="button" class="btn btn-info btn-block">Analysis <span class="badge badge-light">{{unvisited_analysis}} new</span></button>
+          <button type="button" class="btn btn-info btn-block">Visualizations <span class="badge badge-light">{{unvisited_visualization}} new</span></button>
+        </div>
+      </div>
+
+      <div class="card bg-light mb-5 text-secondary border-dark">
+        <div class="card-header display-4 pt-1"><span style="font-size:.8em">Build</span></div>
+        <div class="card-body">
+          <p class="card-text text-justify">Build alignment file for your transgene, create a whole analysis workflow, or add FASTQ processing rule for a smallRNA-Seq protocol.</p>
+        </div>
+        <div class="card-footer bg-transparent border-light p-2 mb-2">
+          <button type="button" class="btn btn-secondary btn-block">Custom Annotation</button>
+          <button type="button" class="btn btn-secondary btn-block">Analysis Workflow</button>
+          <button type="button" class="btn btn-secondary btn-block">Raw Data Workflow</button>
+        </div>
+      </div>
+    </div>
+  </div>
+	{% endblock %}
+
+
+
+
+	{% block afterbody %}
+	{% endblock %}

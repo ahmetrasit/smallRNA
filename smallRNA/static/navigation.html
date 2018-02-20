@@ -1,0 +1,111 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Ahmet R Ozturk">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>{% block title %}{% endblock %}</title>
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <div class="fluid-container">
+
+      <nav class="navbar navbar-expand-sm navbar-dark bg-secondary justify-content-center p-0 m-0">
+        <a class="navbar-brand text-center" href="/">smallRNA Analysis <small> by MelloLab</small></a>
+      </nav>
+      <nav class="navbar navbar-expand-sm navbar-light bg-light p-0 mb-2">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+          <div class="container pl-2">
+            <div class="row">
+              <ul class="navbar-nav mr-auto mt-1 mt-lg-0 pt-0">
+                <li class="nav-item dropdown active">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Prepare
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Upload FASTQ file(s)</a>
+                    <a class="dropdown-item" href="#">Upload Read Counts</a>
+                  </div>
+                </li>
+                <li class="nav-item dropdown active">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Analyze
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Align Prepared Reads</a>
+                    <a class="dropdown-item" href="#">Analyze Aligned Reads</a>
+                    <a class="dropdown-item" href="#">Visualize Analysis</a>
+                  </div>
+                </li>
+
+                <li class="nav-item dropdown active">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Review
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Data</a>
+                    <a class="dropdown-item" href="#">Analysis</a>
+                    <a class="dropdown-item" href="#">Visualizations</a>
+                  </div>
+                </li>
+                <li class="nav-item dropdown active">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Build
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Custom Annotation</a>
+                    <a class="dropdown-item" href="#">Analysis Workflow</a>
+                    <a class="dropdown-item" href="#">Raw Data Workflow</a>
+                  </div>
+                </li>
+              </ul>
+              <div class="nav-item">
+                {% if user.is_authenticated %}
+                <a class="nav-link pr-0 pb-1 pt-1" href="#" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                  <button type="button" class="btn btn-sm btn-outline-secondary">
+                    {{user.username}} <span class="badge badge-warning">{{notifications}}new</span>
+                    <span class="sr-only">unread messages</span>
+                  </button>
+
+                </a>
+                {% else %}
+                <form class="form-inline my-sm-1">
+                  <input class="form-control form-control-sm mr-sm-1" type="username" placeholder="username" aria-label="username">
+                  <input class="form-control form-control-sm mr-sm-1" type="password" placeholder="password" aria-label="password">
+                  <button class="btn btn-sm btn-outline-success my-2 my-sm-0" type="submit">Login</button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </nav>
+    </div>
+
+    <div class="container text-center">
+    {% if user.is_authenticated %}
+
+    {% block body %}{% endblock %}
+    {% else %}
+    <br>
+      <div class="jumbotron">
+        asdf
+      </div>
+    {% endif %}
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+  {% block afterbody %}{% endblock %}
+</html>
