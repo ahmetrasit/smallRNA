@@ -10,6 +10,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <script src="{% static 'js/d3.min.js' %}"></script>
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
   </head>
@@ -66,7 +67,7 @@
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="#">Custom Annotation</a>
                     <a class="dropdown-item" href="#">Analysis Workflow</a>
-                    <a class="dropdown-item" href="#">Raw Data Workflow</a>
+                    <a class="dropdown-item" href="#">Processing Workflow</a>
                   </div>
                 </li>
               </ul>

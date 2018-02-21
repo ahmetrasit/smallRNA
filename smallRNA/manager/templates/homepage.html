@@ -20,7 +20,7 @@
   <div class="row">
     <div class="card-deck">
       <div class="card text-color-dark mb-5">
-        <div class="card-header display-4 pt-1 text-color-dark"><span style="font-size:.8em">Prepare</span></div>
+        <div class="card-header display-4 pt-1 "><span style="font-size:.8em">Prepare</span></div>
         <div class="card-body">
           <p class="card-text text-justify smaller-font">
             You need to process your FASTQ data first to do analysis.
@@ -28,7 +28,7 @@
           </p>
         </div>
         <div class="card-footer bg-transparent border-light p-2 mb-2">
-          <button type="button" class="btn btn-lg btn-color-dark btn-block">Upload FASTQ file(s)</button>
+          <button type="button" class="btn btn-lg btn-color-dark btn-block" data-toggle="modal" data-target="#fileUploadModal">Upload FASTQ file(s)</button>
           <button type="button" class="btn text-color-dark btn-block">Upload Customized Data</button>
         </div>
       </div>
@@ -74,15 +74,392 @@
         <div class="card-footer bg-transparent border-light p-2 mb-2">
           <button type="button" class="btn btn-color-blue-light btn-block">Custom Annotation</button>
           <button type="button" class="btn btn-color-blue-light btn-block">Analysis Workflow</button>
-          <button type="button" class="btn btn-color-blue-light btn-block">Raw Data Workflow</button>
+          <button type="button" class="btn btn-color-blue-light btn-block">Processing Workflow</button>
         </div>
       </div>
     </div>
   </div>
+
+
+  <!-- File Upload Modal -->
+  <div class="modal fade" id="fileUploadModal" tabindex="-1" role="dialog" aria-labelledby="fileUploadModal" aria-hidden="true">
+
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Upload FASTQ Files</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="file-select" name="filesToUpload" multiple>
+                <label id="file_label" class="custom-file-label text-left" for="inputGroupFile02">First, choose fastq.gz file(s)</label>
+              </div>
+            </div>
+            <div class="progress" id="progress-bar-container">
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" id="progressbar"></div>
+            </div>
+            <hr>
+            <ul class="nav nav-pills nav-filled nav-justified" id="fileType" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="single-tab" data-toggle="tab" href="#single" role="tab" aria-controls="single" aria-selected="true" onclick="populateSingleSampleTab()">Single Sample</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="multiple-tab" data-toggle="tab" href="#multiple" role="tab" aria-controls="multiple" aria-selected="false" onclick="populateMultipleSamplesTab()">Each File for a Sample</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="demultiplex-tab" data-toggle="tab" href="#demultiplex" role="tab" aria-controls="demultiplex" aria-selected="false" onclick="populateDemultiplexTab()">They're not De-barcoded</a>
+              </li>
+            </ul>
+            <div class="tab-content" id="fileTypeContent">
+              <div class="tab-pane fade show active border-dark" id="single" role="tabpanel" aria-labelledby="single-tab">
+                <div class="row" id='single-tab-content'>
+                  <div class="col-12 text-left h6 mt-3">
+                    Please select files first.
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="multiple" role="tabpanel" aria-labelledby="multiple-tab">
+                <div class="row ">
+                  <div class="col-12 text-left h6 mt-3">
+                    Each fastq.gz file belongs to a different sample:
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="demultiplex" role="tabpanel" aria-labelledby="demultiplex-tab">
+                <div class="row noFile">
+                  <div class="col-12 text-left h6 mt-3">Please select files first.</div>
+                </div>
+                <div class="row moreThanOneFile">
+                  <div class="col-12 text-left h6 mt-3">Selected fastq.gz file(s) contain following barcodes for different samples</div>
+                </div>
+                <div class="row moreThanOneFile">
+                  <div class="col-md-2 text-left pl-4 h5 smaller-font mb-0 pb-0">Sample Name</div>
+                  <div class="col-md-2 text-left pl-4 h5 smaller-font mb-0 pb-0">Barcode</div>
+                  <div class="col-md-2 text-left h5 smaller-font mb-0 pb-0">Sample Type</div>
+                  <div class="col-md-2 text-left h5 smaller-font mb-0 pb-0">Genotype</div>
+                  <div class="col-md-2 text-left h5 smaller-font mb-0 pb-0">Description</div>
+                  <div class="col-md-2 text-left"><button type="button" class="btn btn-outline-success btn-sm smaller-font mb-0 mr-0" onclick="addIndexToMultiplexTab()">Add Barcode</button></div>
+                </div>
+                <div class="form-row moreThanOneFile mt-1">
+                  <div class="form-group col-md-2 text-left">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1" onclick="deleteRow(this)"><strong>-</strong></span>
+                      </div>
+                      <input type="text" class="form-control" name="sample_name" id="sample_name" placeholder="Sample name" aria-label="Sample name" aria-describedby="basic-addon1">
+                    </div>
+                  </div>
+                  <div class="form-group col-md-2 text-left"><input type="text" class="form-control" name="barcode" id="barcode" placeholder="Barcode sequence"></div>
+                  <div class="form-group col-md-2 text-left"><select class="form-control" name="sample_type" id="sample_type"></select></div>
+                  <div class="form-group col-md-2 text-left"><select class="form-control" name="genotype" id="genotype"></select></div>
+                  <div class="form-group col-md-4 text-left"><input type="text" class="form-control" name="description" id="description" placeholder="Description for this sample"></div>
+                </div>
+              </div>
+            </div>
+            <hr>
+
+            <ul class="nav nav-pills nav-filled nav-justified" id="selectProtocole" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="definedProtocol-tab" data-toggle="tab" href="#definedProtocol" role="tab" aria-controls="definedProtocol" aria-selected="true">Defined Preprocessing Protocols</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="customizeProtocol-tab" data-toggle="tab" href="#customizeProtocol" role="tab" aria-controls="customizeProtocol" aria-selected="false">Customize Preprocessing</a>
+              </li>
+            </ul>
+            <div class="tab-content" id="protocolContent">
+              <div class="tab-pane fade show active border-dark" id="definedProtocol" role="tabpanel" aria-labelledby="definedProtocol-tab">
+                <div class="row" id='single-tab-content'>
+                  <div class="col-12 text-left h6 mt-3">
+                    defined protocols here
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="customizeProtocol" role="tabpanel" aria-labelledby="customizeProtocol-tab">
+                <div class="row ">
+                  <div class="col-12 text-left h6 mt-3">
+                    customize your own protocol
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button class="btn input-group-text" id="upload-button" onclick="uploadFiles()">Upload</button>
+          </div>
+        </div>
+      </div>
+
+  </div>
+
 	{% endblock %}
 
 
 
 
 	{% block afterbody %}
+
+  <script type="text/javascript">
+    var genotype_options = {{genotype_options | safe}}
+    genotype_options.push('add new')
+    d3.selectAll('#genotype').on('change', checkGenotype)
+    d3.selectAll('#genotype').selectAll('option').data(genotype_options).enter()
+      .append('option').text(function(d){return d})
+
+    var sample_type_options = {{sample_type_options | safe}}
+    sample_type_options.push('add new')
+    d3.selectAll('#sample_type').on('change', checkSampleType)
+    d3.selectAll('#sample_type').selectAll('option').data(sample_type_options).enter()
+      .append('option').text(function(d){return d})
+
+
+    //var form = document.getElementById('file-form');
+    var fileSelect = document.getElementById('file-select');
+    //var uploadButton = document.getElementById('upload-button');
+    var fastqgz_files = []
+
+    fileSelect.onchange = function(event){
+      var fastqgz_files = []
+      var files = fileSelect.files;
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+
+        // Check the file type.
+        if (file.type.match('.*gz')) {
+          fastqgz_files.push(file.name)
+        }
+      }
+      if (fastqgz_files.length > 1) {
+        $('#file_label').html(fastqgz_files.length + ' files selected')
+        populateMultipleSamplesTab()
+        populateSingleSampleTab()
+        populateDemultiplexTab()
+      }else if (fastqgz_files.length > 0) {
+        $('#file_label').html(fastqgz_files.length + ' file selected')
+        populateMultipleSamplesTab()
+        populateSingleSampleTab()
+        populateDemultiplexTab()
+      }else {
+        $('#file_label').html('Choose file')
+      }
+
+    }
+
+    function uploadFiles(){
+      var notFastq = false
+
+      var files = fileSelect.files;
+      var formData = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+
+        // Check the file type.
+        if (file.type.match('.*.gz')) {
+          formData.append('filesToUpload', file, file.name);
+          fastqgz_files.push(file.name)
+        }else{
+          notFastq = true
+        }
+      }
+      if (notFastq) {
+        //alert('Sorry, I can process only fastq.gz files. Those will be removed from the file list.')
+      }
+
+
+      var xhr = new XMLHttpRequest()
+      xhr.open('POST', '/uploadFASTQ/', true);
+      xhr.upload.addEventListener('progress', onProgress, false);
+
+      function onProgress(e) {
+        if (e.lengthComputable) {
+          var perc = parseInt(100 * e.loaded / e.total)
+          $('#progressbar').attr('style', 'width:'+perc+'%')
+        }
+      }
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          //uploadButton.innerHTML = 'Upload';
+        } else {
+          //alert('Sorry, there is something wrong. Maybe the server is down, or you lost connection.');
+        }
+      };
+
+
+
+
+
+      xhr.onloadstart = function (e) {
+          $('#progress-bar-container').attr('style', 'visibility:visible')
+      }
+      xhr.onloadend = function (e) {
+          $('#progress-bar-container').attr('style', 'visibility:hidden')
+      }
+
+      xhr.send(formData);
+    }
+
+    function populateMultipleSamplesTab() {
+      console.log('hey')
+      var fastqgz_files = []
+      var files = fileSelect.files;
+      var formData = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        // Check the file type.
+        if (file.type.match('.*g')) {
+          fastqgz_files.push(file.name)
+        }
+      }
+
+      d3.select('#multiple').html("")
+      if (fastqgz_files.length>0) {
+        d3.select('#multiple').html('<div class="row"><div class="col-12 text-left h6 mt-3">Each fastq.gz file belongs to a different sample:</div></div>')
+        d3.select('#multiple').append('div').attr('class', 'row')
+          .html('<div class="col-md-4 text-left">File Name</div><div class="col-md-2 text-left">Sample Name</div><div class="col-md-2 text-left">Sample Type</div><div class="col-md-2 text-left">Genotype</div><div class="col-md-2 text-left">Description</div>')
+        file_forms = d3.select('#multiple').selectAll('div.form-row').data(fastqgz_files).enter()
+          .append('div').attr('class', 'form-row')
+        file_forms.append('div').attr('class', 'form-group col-md-4 text-left')
+          .append('div').attr('class', 'text-truncate pt-2').html(function(d){return '<span class="align-middle">'+d+'</span>'})
+        file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+          .append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'sample_name').attr('id', 'sample_name')
+            .attr('placeholder', 'Sample name')
+        file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+          .append('select').attr('class', 'form-control').attr('name', 'sample_type').attr('id', 'sample_type')
+        file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+          .append('select').attr('class', 'form-control').attr('name', 'genotype').attr('id', 'genotype')
+        file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+          .append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'description').attr('id', 'description')
+            .attr('placeholder', 'Description for this sample')
+
+        d3.selectAll('#genotype').selectAll('option').data(genotype_options).enter()
+          .append('option').text(function(d){return d})
+        d3.selectAll('#genotype').on('change', checkGenotype)
+
+        d3.selectAll('#sample_type').selectAll('option').data(sample_type_options).enter()
+          .append('option').text(function(d){return d})
+        d3.selectAll('#sample_type').on('change', checkSampleType)
+      }else {
+        d3.select('#multiple').html('<div class="row"><div class="col-12 text-left h6 mt-3">Please select files first.</div></div>')
+      }
+
+    }
+
+    function populateSingleSampleTab() {
+      var fastqgz_files = []
+      var files = fileSelect.files;
+      var formData = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (file.type.match('.*gz')) {
+          fastqgz_files.push(file.name)
+        }
+      }
+
+      d3.select('#single').html("")
+      if (fastqgz_files.length>0) {
+        d3.select('#single').html('<div class="row"><div class="col-12 text-left h6 mt-3">Selected fastq.gz file(s) belong to a single sample:</div></div>')
+        d3.select('#single').append('div').attr('class', 'row')
+          .html('<div class="col-md-4 text-left pl-4">Sample Name</div><div class="col-md-2 text-left">Sample Type</div><div class="col-md-2 text-left">Genotype</div><div class="col-md-4 text-left">Description</div>')
+        file_forms = d3.select('#single').selectAll('div.form-row').data(['dummy']).enter()
+          .append('div').attr('class', 'form-row')
+        file_forms.append('div').attr('class', 'form-group col-md-4 text-left')
+          .append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'sample_name').attr('id', 'sample_name')
+            .attr('placeholder', 'Sample name')
+        file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+          .append('select').attr('class', 'form-control').attr('name', 'sample_type').attr('id', 'sample_type')
+        file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+          .append('select').attr('class', 'form-control').attr('name', 'genotype').attr('id', 'genotype')
+        file_forms.append('div').attr('class', 'form-group col-md-4 text-left')
+          .append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'description').attr('id', 'description')
+            .attr('placeholder', 'Description for this sample')
+
+        d3.selectAll('#genotype').selectAll('option').data(genotype_options).enter()
+          .append('option').text(function(d){return d})
+        d3.selectAll('#genotype').on('change', checkGenotype)
+
+        d3.selectAll('#sample_type').selectAll('option').data(sample_type_options).enter()
+          .append('option').text(function(d){return d})
+        d3.selectAll('#sample_type').on('change', checkSampleType)
+
+      }else {
+        d3.select('#single').html('<div class="row"><div class="col-12 text-left h6 mt-3">Please select files first.</div></div>')
+      }
+    }
+
+
+    function populateDemultiplexTab() {
+      var fastqgz_files = []
+      var files = fileSelect.files;
+      var formData = new FormData();
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (file.type.match('.*gz')) {
+          fastqgz_files.push(file.name)
+        }
+      }
+
+      //d3.select('#demultiplex').html("")
+      if (fastqgz_files.length>0) {
+        d3.selectAll('.moreThanOneFile').style('display', 'flex')
+        d3.selectAll('.noFile').style('display', 'none')
+
+
+      }else {
+        d3.selectAll('.moreThanOneFile').style('display', 'none')
+        d3.selectAll('.noFile').style('display', 'flex')
+
+      }
+    }
+
+
+
+
+    function addIndexToMultiplexTab() {
+      file_forms = d3.select('#demultiplex').append('div').attr('class', 'form-row moreThanOneFile')
+      file_forms.append('div').attr('class', 'form-group col-md-2 text-left').html('<div class="input-group"><div class="input-group-prepend"><span class="input-group-text" id="basic-addon1" onclick="deleteRow(this)"><strong>-</strong></span></div><input type="text" class="form-control" name="sample_name" id="sample_name" placeholder="Sample name" aria-label="Sample name" aria-describedby="basic-addon1"></div>')
+        //.append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'sample_name').attr('id', 'sample_name').attr('placeholder', 'Sample name')
+      file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+        .append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'barcode').attr('id', 'barcode')
+          .attr('placeholder', 'Barcode sequence')
+      file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+        .append('select').attr('class', 'form-control').attr('name', 'sample_type').attr('id', 'sample_type')
+      file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
+        .append('select').attr('class', 'form-control').attr('name', 'genotype').attr('id', 'genotype')
+      file_forms.append('div').attr('class', 'form-group col-md-4 text-left')
+        .append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'description').attr('id', 'description')
+          .attr('placeholder', 'Description for this sample')
+
+      d3.selectAll('#genotype').selectAll('option').data(genotype_options).enter()
+        .append('option').text(function(d){return d})
+      d3.selectAll('#genotype').on('change', checkGenotype)
+
+      d3.selectAll('#sample_type').selectAll('option').data(sample_type_options).enter()
+        .append('option').text(function(d){return d})
+      d3.selectAll('#sample_type').on('change', checkSampleType)
+    }
+
+    function deleteRow(e){
+      e.parentNode.parentNode.parentNode.parentNode.remove()
+    }
+
+    function checkGenotype() {
+      console.log('genotype triggered')
+    }
+
+    function checkSampleType() {
+      console.log('sample type triggered')
+    }
+
+
+
+  </script>
 	{% endblock %}
