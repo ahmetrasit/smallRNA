@@ -1,5 +1,6 @@
 {% extends 'templates/navigation.html' %}
 {% load static %}
+{% load custom_tags %}
 
 
 
@@ -72,6 +73,9 @@
           <p class="card-text text-justify smaller-font">Build alignment file for your transgene, create a whole analysis workflow, or add FASTQ processing rule for a smallRNA-Seq protocol.</p>
         </div>
         <div class="card-footer bg-transparent border-light p-2 mb-2">
+          {% if request.user|has_group:"admin" %}
+            <button type="button" class="btn btn-color-blue-light btn-block" data-toggle="modal" data-target="#createProcessModal">Basic Process</button>
+          {% endif %}
           <button type="button" class="btn btn-color-blue-light btn-block">Custom Annotation</button>
           <button type="button" class="btn btn-color-blue-light btn-block">Analysis Workflow</button>
           <button type="button" class="btn btn-color-blue-light btn-block">Processing Workflow</button>
@@ -80,36 +84,16 @@
     </div>
   </div>
 
+  {% include "templates/_file_upload_modal.html" %}
 
-  <!-- File Upload Modal -->
-  <div class="modal fade" id="fileUploadModal" tabindex="-1" role="dialog" aria-labelledby="fileUploadModal" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Upload FASTQ Files</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <!-- File upload part -->
-            {% include "templates/file_upload_modal.html" %}
-            <hr>
-            {% include "templates/multiple_files_content_type_modal.html" %}
-            <hr>
-            {% include "templates/preprocessing_protocols_modal.html" %}
-          </div>
+  {% include "templates/_preprocessing_workflow_modal.html" %}
+
+  {% if request.user|has_group:"admin" %}
+    {% include "templates/_create_process_modal.html" %}
+  {% endif %}
 
 
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button class="btn input-group-text" id="upload-button" onclick="uploadFiles()">Upload</button>
-          </div>
-        </div>
-      </div>
-
-  </div>
 
 	{% endblock %}
 
@@ -118,11 +102,5 @@
 
 	{% block afterbody %}
 
-  <script type="text/javascript">
-    
 
-
-
-
-  </script>
 	{% endblock %}

@@ -1,0 +1,91 @@
+<div class="modal fade" id="createProcessModal" tabindex="-1" role="dialog" aria-labelledby="createProcessModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create Process</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-12 smaller-font">
+          <div class="h4">
+            Mark-up rules:
+          </div>
+          <span class="btn-primary">Accepted inputs in blue</span>, <span class="btn-color-green-light">accepted outputs in green</span>, <span class="btn-danger">forbidden commands in red</span>, <i>types in italic</i>, and <b>names in bold</b>.
+        </div>
+        <hr>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Bash script:</span>
+          </div>
+          <textarea class="form-control" name="rawProcessCommand" rows="2" id="rawProcessCommand" onkeyup="checkCommand()" placeholder="Start writing your script here.">Example: cutadapt -a <i_sequence_barcode <f_fastq_input_file -o >f_fastq_output_file</textarea>
+        </div>
+
+
+        <div class="row">
+          <div class="col-12 smaller-font">
+            <div class="h4 mt-4">
+              Interpreted script:
+            </div>
+          </div>
+          <div class="col-12 mt-1">
+            <div class="border" id="checkedCommand">
+                Start writing bash script above.
+            </div>
+
+          </div>
+          <div class="col-12 mt-2">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">Process name:</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">Description:</span>
+              </div>
+              <input type="text" class="form-control" id="bashProcessDescription" aria-describedby="bashProcessDescription" name="bashProcessDescription">
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button disabled type="button" class="btn btn-primary" id="createBashProcess" onclick="createBashProcess()">Create Bash Process</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function checkCommand() {
+    cmd = document.getElementById('rawProcessCommand').value
+    cmd_list = cmd.split(/\s+/)
+    checked = []
+    for (var i = 0; i < cmd_list.length; i++) {
+      curr = cmd_list[i]
+      if (curr.match(/^<[ifd]_\w+_\w+/)) {
+        parts = curr.split("_")
+        checked.push('<mark class="btn-primary">' + parts[0].replace("<", "&lt;") + '_<i>' + parts[1] + "</i>_<b>" + parts.slice(2).join("_") + "</b></mark>")
+      }else if (curr.match(/^>[ifd]_\w+_\w+/)) {
+        parts = curr.split("_")
+        checked.push('<mark class="btn-color-green-light">' + parts[0] + '_<i>' + parts[1] + "</i>_<b>" + parts.slice(2).join("_") + "</b></mark>")
+      }else if (curr=='rm' || curr=='mv' || curr.match('/')) {
+        checked.push('<mark class="btn-danger">' + curr.replace("<", "&lt;") +  "</mark>")
+      }else {
+        checked.push(curr.replace("<", "&lt;"))
+      }
+    }
+    document.getElementById('checkedCommand').innerHTML = checked.join(" ")
+  }
+
+
+  function createBashProcess() {
+    //check inputs
+  }
+
+  checkCommand()
+</script>

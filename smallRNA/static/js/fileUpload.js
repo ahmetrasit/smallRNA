@@ -1,14 +1,4 @@
-var genotype_options = {{genotype_options | safe}}
-genotype_options.push('add new')
-d3.selectAll('#genotype').on('change', checkGenotype)
-d3.selectAll('#genotype').selectAll('option').data(genotype_options).enter()
-  .append('option').text(function(d){return d})
 
-var sample_type_options = {{sample_type_options | safe}}
-sample_type_options.push('add new')
-d3.selectAll('#sample_type').on('change', checkSampleType)
-d3.selectAll('#sample_type').selectAll('option').data(sample_type_options).enter()
-  .append('option').text(function(d){return d})
 
 var fileSelect = document.getElementById('file-select');
 var fastqgz_files = []
@@ -212,7 +202,7 @@ function populateDemultiplexTab() {
 
 function addIndexToMultiplexTab() {
   file_forms = d3.select('#demultiplex').append('div').attr('class', 'form-row moreThanOneFile')
-  file_forms.append('div').attr('class', 'form-group col-md-2 text-left').html('<div class="input-group"><div class="input-group-prepend"><span class="input-group-text" id="basic-addon1" onclick="deleteRow(this)"><strong>-</strong></span></div><input type="text" class="form-control" name="sample_name" id="sample_name" placeholder="Sample name" aria-label="Sample name" aria-describedby="basic-addon1"></div>')
+  file_forms.append('div').attr('class', 'form-group col-md-2 text-left').html('<div class="input-group"><div class="input-group-prepend"><span class="input-group-text text-white" id="basic-addon1" onclick="deleteRow(this)" style="background-color:red"><i class="fas fa-trash-alt smaller-font"></i></span></div><input type="text" class="form-control" name="sample_name" id="sample_name" placeholder="Sample name" aria-label="Sample name" aria-describedby="basic-addon1"></div>')
     //.append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'sample_name').attr('id', 'sample_name').attr('placeholder', 'Sample name')
   file_forms.append('div').attr('class', 'form-group col-md-2 text-left')
     .append('input').attr('type', 'text').attr('class', 'form-control').attr('name', 'barcode').attr('id', 'barcode')
