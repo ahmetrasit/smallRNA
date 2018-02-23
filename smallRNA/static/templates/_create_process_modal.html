@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="modal fade" id="createProcessModal" tabindex="-1" role="dialog" aria-labelledby="createProcessModal" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -17,9 +19,9 @@
         <hr>
         <div class="input-group">
           <div class="input-group-prepend">
-            <span class="input-group-text">Bash script:</span>
+            <span id="bash_script" class="input-group-text">Bash script:</span>
           </div>
-          <textarea class="form-control" name="rawProcessCommand" rows="2" id="rawProcessCommand" onkeyup="checkCommand()" placeholder="Start writing your script here.">Example: cutadapt -a <i_sequence_barcode <f_fastq_input_file -o >f_fastq_output_file</textarea>
+          <textarea class="form-control cp-user-input" name="bashProcessScript" rows="2" id="rawProcessCommand" onkeyup="checkCommand()" placeholder="Start writing your script here.">Example: cutadapt -a <i_sequence_barcode <f_fastq_input_file -o >f_fastq_output_file</textarea>
         </div>
 
 
@@ -40,16 +42,17 @@
               <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">Process name:</span>
               </div>
-              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+              <input type="text" class="form-control cp-user-input" name="bashProcessName" id="processName" aria-describedby="bashProcessName" onkeyup="checkAllInputs('cp-user-input')">
             </div>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">Description:</span>
               </div>
-              <input type="text" class="form-control" id="bashProcessDescription" aria-describedby="bashProcessDescription" name="bashProcessDescription">
+              <input type="text" class="form-control cp-user-input" id="bashProcessDescription" aria-describedby="bashProcessDescription" name="bashProcessDescription" onkeyup="checkAllInputs('cp-user-input')">
             </div>
           </div>
-
+          <div class="col-md-12" id="cp-message">
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -61,31 +64,70 @@
 </div>
 
 <script type="text/javascript">
+
   function checkCommand() {
-    cmd = document.getElementById('rawProcessCommand').value
+    [atLeastOneIO, danger, checkedScript] = validateScript('rawProcessCommand')
+
+    document.getElementById('checkedCommand').innerHTML = checkedScript
+    $('#createBashProcess').prop('disabled', true)
+    if (danger) {
+      d3.select('#bash_script').attr('class', 'input-group-text btn-color-red')
+    }else if (atLeastOneIO) {
+      d3.select('#bash_script').attr('class', 'input-group-text btn-color-green')
+      scriptValid = true
+      checkAllInputs('cp-user-input')
+
+    }else {
+      d3.select('#bash_script').attr('class', 'input-group-text btn-color-gray-light')
+    }
+  }
+
+  function validateScript(script_id){
+    var atLeastOneIO = false
+    var danger = false
+    //script_id = 'rawProcessCommand'
+    cmd = document.getElementById(script_id).value
     cmd_list = cmd.split(/\s+/)
     checked = []
     for (var i = 0; i < cmd_list.length; i++) {
       curr = cmd_list[i]
-      if (curr.match(/^<[ifd]_\w+_\w+/)) {
+      if (curr.match(/^<[ifds]_\w+_\w+/)) {
         parts = curr.split("_")
         checked.push('<mark class="btn-primary">' + parts[0].replace("<", "&lt;") + '_<i>' + parts[1] + "</i>_<b>" + parts.slice(2).join("_") + "</b></mark>")
-      }else if (curr.match(/^>[ifd]_\w+_\w+/)) {
+        atLeastOneIO = true
+      }else if (curr.match(/^>[ifds]_\w+_\w+/)) {
         parts = curr.split("_")
         checked.push('<mark class="btn-color-green-light">' + parts[0] + '_<i>' + parts[1] + "</i>_<b>" + parts.slice(2).join("_") + "</b></mark>")
+        atLeastOneIO = true
       }else if (curr=='rm' || curr=='mv' || curr.match('/')) {
         checked.push('<mark class="btn-danger">' + curr.replace("<", "&lt;") +  "</mark>")
+        danger = true
       }else {
         checked.push(curr.replace("<", "&lt;"))
       }
     }
-    document.getElementById('checkedCommand').innerHTML = checked.join(" ")
+    return [atLeastOneIO, danger, checked.join(" ")]
   }
 
-
-  function createBashProcess() {
-    //check inputs
+  function checkAllInputs(classname) {
+    var haveInput = true
+    var user_inputs = document.getElementsByClassName(classname);
+    for(var i = 0; i < user_inputs.length; i++)
+    {
+      if (user_inputs[i].value.replace(/^\s+|\s+$/g, '').length > 0) {
+        //do nothing
+      }else {
+        haveInput = false
+      }
+    }
+    [atLeastOneIO, danger, checkedScript] = validateScript('rawProcessCommand')
+    if (haveInput & atLeastOneIO & !danger) {
+      $('#createBashProcess').prop('disabled', false)
+    }else {
+      $('#createBashProcess').prop('disabled', true)
+    }
   }
 
-  checkCommand()
+  //checkCommand()
 </script>
+<script src="{% static 'js/build.js' %}"></script>

@@ -50,7 +50,6 @@ function uploadFiles(){
     //alert('Sorry, I can process only fastq.gz files. Those will be removed from the file list.')
   }
 
-
   var xhr = new XMLHttpRequest()
   xhr.open('POST', '/uploadFASTQ/', true);
   xhr.upload.addEventListener('progress', onProgress, false);
@@ -69,10 +68,6 @@ function uploadFiles(){
       //alert('Sorry, there is something wrong. Maybe the server is down, or you lost connection.');
     }
   };
-
-
-
-
 
   xhr.onloadstart = function (e) {
       $('#progress-bar-container').attr('style', 'visibility:visible')

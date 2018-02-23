@@ -22,5 +22,6 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', manager_views.homepage, name='homepage'),
-    url(r'^uploadFASTQ/$', manager_views.uploadFASTQ, name='homepage'),
+    url(r'^uploadFASTQ/$', manager_views.uploadFASTQ, name='uploadFASTQ'),
+    url(r'^createProcess/$', manager_views.createProcess, name='createProcess'),
 ]

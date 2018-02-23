@@ -7,11 +7,37 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.http import JsonResponse
+from manager.models import *
 import os
 
-@csrf_exempt
 def homepage(request):
 	return render(request, 'homepage.html', {'user':request.user, 'genotype_options':['wt', 'mut'], 'sample_type_options':['input', 'IP']})
+
+
+@csrf_exempt
+def createProcess(request):
+    print(request.POST.keys())
+    print('db', BashProcess.objects.all())
+    if request.POST['bashProcessName'] not in BashProcess.objects.values_list('name', flat=True):
+        try:
+            bash_process = BashProcess(
+    			name = request.POST['bashProcessName'],
+                process_type = 'bash',
+                status = 'approved',
+                inputs = getInputs(request.POST['bashProcessScript']),
+                outputs = getOutputs(request.POST['bashProcessScript']),
+                parameters = '',
+                description = request.POST['bashProcessDescription'],
+                script = request.POST['bashProcessScript'],
+                created_by = request.user.username
+    		)
+            bash_process.save()
+            return HttpResponse('<div class="btn btn-success btn-block">Bash Process Successfully Created</div>')
+        except Exception as e:
+            return HttpResponse('<div class="btn btn-danger btn-block">There is a problem on server side!</div>')
+    else:
+        return HttpResponse('<div class="btn btn-danger btn-block">You should change the process name</div>')
+
 
 #@login_required
 @csrf_exempt

@@ -16,6 +16,21 @@
   font-size:.8em
 }
 
+
+.btn-color-red {
+  color: #FFFFFF;
+  background-color: #ff0000;
+  border-color: #ff0000;
+}
+
+
+.btn-color-green {
+  color: #FFFFFF;
+  background-color: #008000;
+  border-color: #008000;
+}
+
+
 .btn-color-dark {
   color: #FFFFFF;
   background-color: #0a3d62;
