@@ -23,7 +23,7 @@ class BashProcess(models.Model):
     name = models.CharField(max_length=50)
     process_type = models.CharField(max_length=20) #python, bash, R
     status = models.CharField(max_length=20)
-    inputs = models.TextField() #i:file/database/html_input:type:name
+    inputs  = models.TextField() #i:file/database/html_input:type:name
     outputs = models.TextField() #o:file/database/html_input:type:name
     parameters = models.TextField()
     description = models.TextField()

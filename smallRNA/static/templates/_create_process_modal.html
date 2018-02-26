@@ -91,14 +91,17 @@
     checked = []
     for (var i = 0; i < cmd_list.length; i++) {
       curr = cmd_list[i]
-      if (curr.match(/^<[ifds]_\w+_\w+/)) {
+      if (curr.match(/^<[ifds]_[\w-]+_[a-zA-Z_-]+/)) {
         parts = curr.split("_")
         checked.push('<mark class="btn-primary">' + parts[0].replace("<", "&lt;") + '_<i>' + parts[1] + "</i>_<b>" + parts.slice(2).join("_") + "</b></mark>")
         atLeastOneIO = true
-      }else if (curr.match(/^>[ifds]_\w+_\w+/)) {
+      }else if (curr.match(/^>[ifds]_[\w-]+_[a-zA-Z_-]+/)) {
         parts = curr.split("_")
         checked.push('<mark class="btn-color-green-light">' + parts[0] + '_<i>' + parts[1] + "</i>_<b>" + parts.slice(2).join("_") + "</b></mark>")
         atLeastOneIO = true
+      }else if (curr.match(/^-p_[\w-]+/)) {//parameters like n of threads
+        parts = curr.split("_")
+        checked.push('<mark class="btn-color-yellow">' + parts[0] + '_<i>' + parts[1] + "</i>" + "</b></mark>")
       }else if (curr=='rm' || curr=='mv' || curr.match('/')) {
         checked.push('<mark class="btn-danger">' + curr.replace("<", "&lt;") +  "</mark>")
         danger = true
