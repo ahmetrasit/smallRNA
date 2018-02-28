@@ -40,15 +40,21 @@
           <div class="col-12 mt-2">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon3">Process name:</span>
+                <span class="input-group-text" id="basic-addon3">Process id:</span>
               </div>
-              <input type="text" class="form-control cp-user-input" name="bashProcessName" id="processName" aria-describedby="bashProcessName" onkeyup="checkAllInputs('cp-user-input')">
+              <input type="text" placeholder="Short id (<20 characters) without any space, unique" class="form-control cp-user-input" name="bashProcessID" id="bashProcessID" aria-describedby="bashProcessID" onkeyup="checkAllInputs('cp-user-input')">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">Short process name:</span>
+              </div>
+              <input type="text" placeholder="Like a process title" class="form-control cp-user-input" name="bashProcessName" id="processName" aria-describedby="bashProcessName" onkeyup="checkAllInputs('cp-user-input')">
             </div>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">Description:</span>
               </div>
-              <input type="text" class="form-control cp-user-input" id="bashProcessDescription" aria-describedby="bashProcessDescription" name="bashProcessDescription" onkeyup="checkAllInputs('cp-user-input')">
+              <input type="text" placeholder="Long process desription" class="form-control cp-user-input" id="bashProcessDescription" aria-describedby="bashProcessDescription" name="bashProcessDescription" onkeyup="checkAllInputs('cp-user-input')">
             </div>
           </div>
           <div class="col-md-12" id="cp-message">
@@ -118,7 +124,7 @@
     for(var i = 0; i < user_inputs.length; i++)
     {
       if (user_inputs[i].value.replace(/^\s+|\s+$/g, '').length > 0) {
-        //do nothing
+        //
       }else {
         haveInput = false
       }

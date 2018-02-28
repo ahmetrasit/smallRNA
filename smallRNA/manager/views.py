@@ -12,24 +12,27 @@ import os
 import re
 
 def homepage(request):
-	return render(request, 'homepage.html', {'user':request.user, 'genotype_options':['wt', 'mut'], 'sample_type_options':['input', 'IP']})
+	workflows = serializers.serialize("json", Workflow.objects.all())
+	print(workflows)
+	return render(request, 'homepage.html', {'user':request.user, 'genotype_options':['wt', 'mut'], 'sample_type_options':['input', 'IP'], 'workflows':workflows})
 
 
 @csrf_exempt
 def createProcess(request):
     print(request.POST.keys())
-    print('db', BashProcess.objects.all())
-    if request.POST['bashProcessName'].strip() not in BashProcess.objects.values_list('name', flat=True):
+    print('db', Workflow.objects.all())
+    if request.POST['bashProcessID'].strip() not in Workflow.objects.values_list('process_id', flat=True):
         try:
-            bash_process = BashProcess(
+            bash_process = Workflow(
+				process_id = request.POST['bashProcessID'].strip(),
     			name = request.POST['bashProcessName'].strip(),
-                process_type = 'bash',
+                category = 'bash',
                 status = 'approved',
                 inputs = getInputs(request.POST['bashProcessScript'].strip().lower()),
                 outputs = getOutputs(request.POST['bashProcessScript'].strip().lower()),
                 parameters = getParameters(request.POST['bashProcessScript'].strip().lower()),
                 description = request.POST['bashProcessDescription'].strip(),
-                script = request.POST['bashProcessScript'].strip(),
+                content = request.POST['bashProcessScript'].strip(),
                 created_by = request.user.username
     		)
             bash_process.save()
@@ -37,7 +40,7 @@ def createProcess(request):
         except Exception as e:
             return HttpResponse('<div class="btn btn-danger btn-block">There is a problem on server side!'+str(e)+'</div>')
     else:
-        return HttpResponse('<div class="btn btn-danger btn-block">There is already a process with the same name!</div>')
+        return HttpResponse('<div class="btn btn-danger btn-block">There is already a process with the same id!</div>')
 
 
 

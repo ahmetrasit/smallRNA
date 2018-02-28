@@ -77,8 +77,7 @@
             <button type="button" class="btn btn-color-blue-light btn-block" data-toggle="modal" data-target="#createProcessModal">Basic Process</button>
           {% endif %}
           <button type="button" class="btn btn-color-blue-light btn-block">Custom Annotation</button>
-          <button type="button" class="btn btn-color-blue-light btn-block">Analysis Workflow</button>
-          <button type="button" class="btn btn-color-blue-light btn-block">Processing Workflow</button>
+          <button type="button" class="btn btn-color-blue-light btn-block" data-toggle="modal" data-target="#createWorkflowModal">New Workflow</button>
         </div>
       </div>
     </div>
@@ -87,6 +86,8 @@
   {% include "templates/_file_upload_modal.html" %}
 
   {% include "templates/_preprocessing_workflow_modal.html" %}
+
+	{% include "templates/_create_workflow_modal.html" %}
 
   {% if request.user|has_group:"admin" %}
     {% include "templates/_create_process_modal.html" %}
