@@ -19,81 +19,27 @@
             <option value="">pivot-table</option>
           </select>
           <select class="form-control" name="end-point" id="select-end-point" onchange="checkWorkflowBoundaries()">
-            <option value="">Which data type do you want to create?</option>
+            <option value="">Which data type do you want to create as output?</option>
             <option value="">counts-fa</option>
             <option value="">sam</option>
             <option value="">pivot-table</option>
           </select>
         </div>
         <hr>
-        <div class="col-12" id="workflowArea">
-          <div class="row justify-content-center">
 
-              <div class="card w-50" id="start-point">
-                <div class="card-block smaller-font">
-                </div>
-                <div class="card-footer">
-                  <div class="data-type">
-                  </div>
-                  <div class="sends-to">
-                  </div>
-                </div>
-              </div>
-
+        <div class="col-12 justify-content-center " id="workflowArea">
+          <div class="card-deck justify-content-center level-1">
           </div>
-          <div class="row justify-content-center" id="workflow-content-1">
-
-                <div class="card w-25" id="level-1-1">
-                  <div class="card-header">
-                    <div class="data-type">a
-                    </div>
-                    <div class="gets-from">
-                    </div>
-                  </div>
-                  <div class="card-block smaller-font">c
-                  </div>
-                  <div class="card-footer">
-                    <div class="data-type">b
-                    </div>
-                    <div class="gets-from">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card w-25" id="level-1-1">
-                  <div class="card-header">
-                    <div class="data-type">a
-                    </div>
-                    <div class="gets-from">
-                    </div>
-                  </div>
-                  <div class="card-block smaller-font">c
-                  </div>
-                  <div class="card-footer">
-                    <div class="data-type">b
-                    </div>
-                    <div class="gets-from">
-                    </div>
-                  </div>
-                </div>
+          <div class="card-deck justify-content-center level-2">
           </div>
-
-          <div class="row justify-content-center">
-            <div class="col-4">
-              <div class="card" id="end-point">
-                <div class="card-header">
-                  <div class="data-type">
-                  </div>
-                  <div class="gets-from">
-                  </div>
-                </div>
-                <div class="card-block smaller-font">
-                </div>
-              </div>
-            </div>
+          <div class="card-deck justify-content-center level-3">
           </div>
-
+          <div class="card-deck justify-content-center level-4">
+          </div>
+          <div class="card-deck justify-content-center level-5">
+          </div>
         </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -104,7 +50,42 @@
 </div>
 
 
+
+<div class="modal fade" id="selectProcessModal" tabindex="-1" role="dialog" aria-labelledby="selectWorkflowModal" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Select Process</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-12 smaller-font">
+          <select class="form-control" name="start-point" id="selectProcess-select" onchange="selectProcessUpdateInfo()">
+            <option value="">Select process</option>
+
+          </select>
+        </div>
+        <hr>
+        <div class="card-deck justify-content-center" id="selectProcessSelectedCard">
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick='$("#createWorkflowModal").modal()'>Close</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick='selectProcessSelected()'>Select</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script type="text/javascript">
+  var selectedProces = ''
+  var workflow_cards = {}
   var workflows = {{workflows | safe}}
   var data_type_explanations = {
           'fastq-gz':'Raw FASTQ input, in .gz format (fastq.gz)',
@@ -115,19 +96,92 @@
     start_index = document.getElementById('select-start-point').selectedIndex
     end_index = document.getElementById('select-end-point').selectedIndex
     if ( start_index > 0 & end_index > 0) {
+
       var start_type = document.getElementById('select-start-point').options[start_index].text
-      d3.select('#start-point').select('.card-block').html(data_type_explanations[start_type])
-      d3.select('#start-point').select('.card-footer').select('.data-type').html('<button type="button" class="btn btn-secondary" onclick="addProcess(\'start-point\')">' + start_type + '</button>')
+      var start_card = createEmptyWorkflowCard('start', 'level-1', start_type, {'body':1, 'footer':1})
+      console.log(start_card)
+
+      start_card.select('.card-block').html(data_type_explanations[start_type])
+      start_card.select('.card-footer').select('.data-type').html("<button type='button'class='btn btn-sm btn-info' onclick='addProcess(\"" + start_type + "\")'> + "+start_type+"</button>")
 
       var end_type = document.getElementById('select-end-point').options[end_index].text
-      d3.select('#end-point').select('.card-header').select('.data-type').html(end_type)
-      d3.select('#end-point').select('.card-block').html(data_type_explanations[end_type])
+      var end_card = createEmptyWorkflowCard('end', 'level-5', end_type, {'header':1, 'body':1})
+      end_card.select('.card-header').select('.data-type').html(end_type)
+      end_card.select('.card-block').html(data_type_explanations[end_type])
+    }
   }
 
 
-  function addProcess(process_name) {
+  function createEmptyWorkflowCard(source, target_level, target_id, parts) {
+    var card = d3.select('.' + target_level).append('card').attr('id', target_id)
+    if (parts['header']) {
+      var header = card.append('div').attr('class', 'card-header')
+      header.append('div').attr('class', 'data-type')
+      header.append('div').attr('class', 'gets-from')
+    }
+    if (parts['body']) {
+      var body = card.append('div').attr('class', 'card-block smaller-font')
+      card.append('div').attr('class', 'delete')
+    }
+    if (parts['footer']) {
+      var footer = card.append('div').attr('class', 'card-footer')
+      footer.append('div').attr('class', 'data-type')
+      footer.append('div').attr('class', 'gets-from')
+    }
+
+    return card
+
+  }
+
+  function addProcess(type){
+    console.log(type)
+    passed = workflows.filter(function(d){ return d['fields']['inputs'].includes(':'+type+':')})
+    $("#createWorkflowModal").modal('hide')
+    $("#selectProcessModal").modal()
+    var selectProcess = d3.select('#selectProcess-select')
+    for(var i=0; i<passed.length; i++){
+      selectProcess.append('option').text(passed[i]['fields']['process_id'])
+      console.log(passed[i]['fields']['process_id'])
+    }
+
+
+
+  }
+
+  function fillWorkflowCard(target_id, info) {
+    var card = d3.select('card#'+target_id)
+
+  }
+
+  function selectProcessSelected(){
+    var index = document.getElementById('selectProcess-select').selectedIndex
+    selectedProces = document.getElementById('selectProcess-select').options[index].text
+    console.log(selectedProces)
+  }
+
+  function selectProcessUpdateInfo(){
+    var index = document.getElementById('selectProcess-select').selectedIndex
+    selectedProces = document.getElementById('selectProcess-select').options[index].text
+    if (index > 0) {
+        //console.log(selectedProces)
+        var info = workflows.filter(function(d){ return d['fields']['process_id'] == selectedProces})[0]
+        //console.log(info['fields']['description'])
+        var inputs = info['fields']['inputs'].split(";")
+        var input_text = inputs.map(function(d){
+                  fields = d.split(':');
+                  return fields[1]+"(" + fields[0] + ")"
+                }).join(" / ")
+
+        var card = d3.select('#selectProcessSelectedCard').append('card')
+        card.append('div').attr('class', 'card-header').html(input_text)
+        card.append('div').attr('class', 'card-block')
+        card.append('div').attr('class', 'card-footer')
+    }else {
+      d3.select('#selectProcessSelectedCard').selectAll('.card').remove()
+
+    }
+
   }
 
 
-  }
 </script>

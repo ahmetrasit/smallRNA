@@ -29,6 +29,7 @@ class Workflow(models.Model):
     parameters = models.TextField()
     description = models.TextField()
     content = models.TextField()
+    script = models.TextField()
     created_by = models.TextField()
     created_on = models.DateTimeField(auto_now=True)
 
