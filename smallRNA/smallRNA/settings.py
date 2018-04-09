@@ -25,7 +25,7 @@ SECRET_KEY = '!beap#v5mahk*-@486^iz0pmln8e0zq80ah7b!42wco@wneov!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['146.189.162.100']
 
 
 # Application definition
@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'smallRNA.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'smallrna',
+	'USER': 'smallrna',
+	'PASSWORD': 'mello.18smallrna',
+	'HOST': 'localhost',
+	'PORT': '',
     }
 }
 
@@ -122,6 +126,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 STATICFILES_DIRS = (
-	os.path.join(BASE_DIR, 'static'),
+	'/mnt/home/smallrna/static',
 )
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
